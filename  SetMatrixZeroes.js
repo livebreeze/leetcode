@@ -1,5 +1,5 @@
 /* 
-2024/4/17
+2024/4/17 used 1.5hrs
 Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
 */
 
@@ -7,45 +7,36 @@ Given an m x n integer matrix matrix, if an element is 0, set its entire row and
  * @param {number[][]} matrix
  * @return {void} Do not return anything, modify matrix in-place instead.
  */
-var setZeroes = function (matrix) {
-  var listLength = matrix[0].length;
-  var resultArr = [];
-
+var setZeroes = function(matrix) {
+  var resultRowArr = [];
+  var resultColArr = [];
+  
   for (var i = 0; i < matrix.length; i++) {
-    resultArr.push(matrix[i]);
-    // for (var l=0; l< matrix[i].length; l++) {
-    //     resultArr[i][l] = matrix[i][l];
-    // }
-  }
-
-  // process col
-  for (var i = 0; i < listLength; i++) {
-    var arrSum = 1;
-    var colHasZero = false;
-    for (const m of matrix) {
-      arrSum = arrSum * m[i];
-      if (arrSum === 0) {
-        colHasZero = true;
-        break;
+      
+      // process row
+      var isRowIncludeZero = matrix[i].some(x => x === 0);
+      if (isRowIncludeZero) {
+          resultRowArr[i] = 0;          
+      } else {
+          resultRowArr[i] = 1;
       }
-    }
-
-    if (colHasZero) {
-      for (var l = 0; l < resultArr.length; l++) {
-        resultArr[l][i] = 0;
+      
+      // process col
+      for (var j = 0; j < matrix[i].length; j++) {
+          resultColArr[j] = resultColArr[j] === 0 ? 0 : 1;
+          var isColIncludeZero = (matrix[i][j] * resultColArr[j]) === 0;
+          if (isColIncludeZero) {
+              resultColArr[j] = 0;          
+          } else {
+              resultColArr[j] = 1;
+          }
       }
-    }
   }
-
-  // process row
+  
+  // modify matrix
   for (var i = 0; i < matrix.length; i++) {
-    if (matrix[i].some((x) => x === 0)) {
-      var arrLength = matrix[i].length;
-      for (var l = 0; l < arrLength; l++) {
-        resultArr[i][l] = 0;
+      for (var j = 0; j < matrix[i].length; j++) {
+          matrix[i][j] = matrix[i][j] * resultRowArr[i] * resultColArr[j];
       }
-    }
   }
-
-  matrix = resultArr;
 };
